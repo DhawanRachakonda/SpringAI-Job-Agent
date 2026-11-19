@@ -36,6 +36,7 @@ Offline: a scripted fake Spring AI `ChatModel` wrapped in a `ChatClient`, an in-
 
 ## Notes
 
+- Jobs are stored in MongoDB database `jd_intake_db`, collection `jobs_springai` (override with `MONGO_DB` and `MONGO_COLLECTION`). Each sibling app uses its own collection, and the Python original uses `jobs`, so several apps can share one cluster without the duplicate check (same title and company) seeing each other's jobs.
 - Spring AI's `BeanOutputConverter` turns the model's JSON reply into the `ExtractedFields` and `QualityScore` records. A reply that cannot be read counts as "nothing extracted" or a score of 0; an API error (bad key, network) is not swallowed.
 - Users are told apart only by `thread_id`, which the React app keeps in memory and sends back with each answer. There is no login.
 - Checkpoints are kept after a run ends (`releaseThread(false)`), like the Python `SqliteSaver`.

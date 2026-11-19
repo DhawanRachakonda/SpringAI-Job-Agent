@@ -22,3 +22,7 @@ server:
 
 job-agent:
   checkpoint-db: ${CHECKPOINT_DB:checkpoints.sqlite}
+  mongo:
+    database: ${MONGO_DB:jd_intake_db}
+    # Each app uses its own collection, so the apps' duplicate checks do not see each other's jobs.
+    collection: ${MONGO_COLLECTION:jobs_springai}

@@ -13,31 +13,33 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
 /**
- * MongoDB-backed store (same database and collection as the Python version).
+ * MongoDB-backed store. The database and collection are configurable so that several apps can share
+ * one cluster without sharing a collection (the duplicate check would otherwise see each other's jobs).
  * Duplicate check compares precomputed lowercase fields (equality, no regex),
  * so special characters in a title can never break the query.
  */
 public class MongoJobStore implements JobStore {
 
-    private static final String DB_NAME = "jd_intake_db";
-    private static final String COLLECTION_NAME = "jobs";
-
     private final String mongoUri;
+    private final String dbName;
+    private final String collectionName;
     private MongoClient client;
 
-    public MongoJobStore(String mongoUri) {
+    public MongoJobStore(String mongoUri, String dbName, String collectionName) {
         if (mongoUri == null || mongoUri.isBlank()) {
             throw new IllegalStateException(
                     "MONGO_URI is not set. Add your MongoDB Atlas connection string to .env (see .env.example).");
         }
         this.mongoUri = mongoUri;
+        this.dbName = dbName;
+        this.collectionName = collectionName;
     }
 
     private MongoCollection<Document> collection() {
         if (client == null) {
             client = MongoClients.create(mongoUri);
         }
-        return client.getDatabase(DB_NAME).getCollection(COLLECTION_NAME);
+        return client.getDatabase(dbName).getCollection(collectionName);
     }
 
     @Override
