@@ -1,0 +1,24 @@
+# Reads secrets from the environment, or from a local .env file (KEY=value lines) if present.
+spring:
+  config:
+    import: "optional:file:.env[.properties]"
+  main:
+    banner-mode: "off"
+  web:
+    resources:
+      # The React app: build it with `cd frontend && npm install && npm run build`.
+      static-locations: "file:frontend/dist/,classpath:/static/"
+  ai:
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY:}
+      chat:
+        options:
+          model: ${ANTHROPIC_MODEL:claude-sonnet-5-5}
+          max-tokens: 2048
+
+server:
+  address: 127.0.0.1
+  port: ${PORT:8080}
+
+job-agent:
+  checkpoint-db: ${CHECKPOINT_DB:checkpoints.sqlite}
