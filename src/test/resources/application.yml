@@ -1,0 +1,14 @@
+# Test configuration: deliberately does NOT import the local .env, so a developer's real MONGO_URI and API key
+# never reach the tests (they use a fake ChatClient and an in-memory job store).
+spring:
+  main:
+    banner-mode: "off"
+  ai:
+    anthropic:
+      api-key: test-key-not-used
+
+job-agent:
+  checkpoint-db: target/test-checkpoints.sqlite
+  mongo:
+    database: test_db
+    collection: test_jobs
